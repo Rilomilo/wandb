@@ -639,7 +639,7 @@ class Settings(SettingsData):
             _disable_meta={
                 # set to True to prevent from generating metadata files
                 # (conda-environment.yaml, wandb-metadata.json, requirements.txt)
-                "value": False,
+                "value": True,
                 "preprocessor": _str_as_bool,
                 "hook": lambda x: self._disable_machine_info or x,
             },
@@ -659,10 +659,12 @@ class Settings(SettingsData):
             _extra_http_headers={"preprocessor": _str_as_json},
             # reduce retry times to prevent waiting too long
             # _file_uploader_retry_max={"value": 1, "preprocessor": int},
+            # _file_stream_retry_max option doesn't work
             _file_stream_retry_max={"preprocessor": int},
             _file_stream_retry_wait_min_seconds={"preprocessor": float},
             _file_stream_retry_wait_max_seconds={"preprocessor": float},
             _file_stream_timeout_seconds={"preprocessor": float},
+            # _file_transfer_retry_max option doesn't work
             _file_transfer_retry_max={"preprocessor": int},
             _file_transfer_retry_wait_min_seconds={"preprocessor": float},
             _file_transfer_retry_wait_max_seconds={"preprocessor": float},

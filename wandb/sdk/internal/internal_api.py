@@ -2838,17 +2838,22 @@ class Api:
                     )
                 if env.is_debug(env=self._environ):
                     logger.debug("upload_file: %s", url)
+
                 print(f"uploading: {file.name}")
                 t1=time.time()
                 response = self._upload_file_session.put(
                     url, data=progress, headers=extra_headers
                 )
                 t2=time.time()
-                print(f"finish {file.name} in {t2-t1}s")
+                # print(f"finish {file.name} in {t2-t1}s")
+
                 if env.is_debug(env=self._environ):
                     logger.debug("upload_file: %s complete", url)
                 response.raise_for_status()
         except requests.exceptions.RequestException as e:
+            # t2=time.time()
+            # print(f"failed to upload {file.name} in {t2-t1}s")
+
             logger.error(f"upload_file exception {url}: {e}")
             request_headers = e.request.headers if e.request is not None else ""
             logger.error(f"upload_file request headers: {request_headers}")
@@ -2863,19 +2868,19 @@ class Api:
             )
             # We need to rewind the file for the next retry (the file passed in is `seek`'ed to 0)
             progress.rewind()
-            # Retry errors from cloud storage or local network issues
-            if (
-                status_code in (308, 408, 409, 429, 500, 502, 503, 504)
-                or isinstance(
-                    e,
-                    (requests.exceptions.Timeout, requests.exceptions.ConnectionError),
-                )
-                or is_aws_retryable
-            ):
-                _e = retry.TransientError(exc=e)
-                raise _e.with_traceback(sys.exc_info()[2])
-            else:
-                wandb._sentry.reraise(e)
+            # DO NOT RETRY, prevent infinite loops
+            # if (
+            #     status_code in (308, 408, 409, 429, 500, 502, 503, 504)
+            #     or isinstance(
+            #         e,
+            #         (requests.exceptions.Timeout, requests.exceptions.ConnectionError),
+            #     )
+            #     or is_aws_retryable
+            # ):
+            #     _e = retry.TransientError(exc=e)
+            #     raise _e.with_traceback(sys.exc_info()[2])
+            # else:
+            wandb._sentry.reraise(e)
 
         return response
 
