@@ -49,6 +49,7 @@ from ..lib.filenames import DIFF_FNAME, METADATA_FNAME
 from ..lib.gitlib import GitRepo
 from . import context
 from .progress import Progress
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -2837,9 +2838,13 @@ class Api:
                     )
                 if env.is_debug(env=self._environ):
                     logger.debug("upload_file: %s", url)
+                print(f"uploading: {file.name}")
+                t1=time.time()
                 response = self._upload_file_session.put(
                     url, data=progress, headers=extra_headers
                 )
+                t2=time.time()
+                print(f"finish {file.name} in {t2-t1}s")
                 if env.is_debug(env=self._environ):
                     logger.debug("upload_file: %s complete", url)
                 response.raise_for_status()
