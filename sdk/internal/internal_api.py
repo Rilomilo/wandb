@@ -2842,7 +2842,13 @@ class Api:
                 print(f"uploading: {file.name}")
                 t1=time.time()
                 response = self._upload_file_session.put(
-                    url, data=progress, headers=extra_headers
+                    url, 
+                    data=progress, 
+                    headers=extra_headers, 
+                    proxies = {
+                        'http': 'http://127.0.0.1:7890',
+                        'https': 'http://127.0.0.1:7890',
+                    }
                 )
                 t2=time.time()
                 # print(f"finish {file.name} in {t2-t1}s")
