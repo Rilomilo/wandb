@@ -177,7 +177,7 @@ class Api:
     """
 
     HTTP_TIMEOUT = env.get_http_timeout(20)
-    FILE_PUSHER_TIMEOUT = env.get_file_pusher_timeout()
+    FILE_PUSHER_TIMEOUT = env.get_file_pusher_timeout(10)
     _global_context: context.Context
     _local_data: _ThreadLocalData
 
