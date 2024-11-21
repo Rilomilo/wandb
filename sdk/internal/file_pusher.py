@@ -31,7 +31,7 @@ class FilePusher:
     complete.
     """
 
-    MAX_UPLOAD_JOBS = 64
+    MAX_UPLOAD_JOBS = 16 # reduce timeout failures
 
     def __init__(
         self,
